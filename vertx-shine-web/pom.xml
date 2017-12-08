@@ -21,6 +21,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <dependencies>
         <!-- vertx -->
         <dependency>
@@ -92,4 +98,26 @@
             </plugin>
         </plugins>
     </build>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/7le/vertx-shine</url>
+        <connection>scm:git:https://github.com/7le/vertx-shine.git</connection>
+        <developerConnection>scm:git:https://github.com/7le/vertx-shine.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>7le</name>
+            <email>sile.heqian@gmail.com</email>
+            <organization>ArkStack</organization>
+        </developer>
+    </developers>
+
 </project>
