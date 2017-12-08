@@ -22,6 +22,6 @@ public @interface RouteMapping {
     /**
      * 详情
      */
-    String descript() default "";
+    String description() default "";
 
 }

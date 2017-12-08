@@ -21,11 +21,11 @@ public class VideoVerticle {
 
     @RouteMapping(method = RequestMethod.GET, value = "test")
     public Handler<RoutingContext> test() {
-        return handler -> {
-            vertx.executeBlocking(s -> {
-                System.out.println("yoyo !");
-            }, h -> {});
-            handler.response().setStatusCode(200).end("It is amazing !");
-        };
+        return routingContext -> vertx.executeBlocking(future -> {
+            System.out.println("executeBlocking: "+Thread.currentThread().getName());
+            System.out.println("type : " + routingContext.request().getParam("type"));
+            //需要调用complete  FutureImpl -> setHandler 需要
+            future.complete(1);
+        }, h -> routingContext.response().setStatusCode(200).end("It is amazing !"));
     }
 }

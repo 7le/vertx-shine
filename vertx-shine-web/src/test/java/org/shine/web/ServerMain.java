@@ -16,6 +16,7 @@ import java.io.IOException;
 public class ServerMain {
 
     public static void main(String[] args) throws IOException {
+        //开启集群
         VerticleLauncher.isCluster = true;
         VerticleLauncher.getStandardVertx(Vertx.vertx());
         DeployVertxServer.startDeploy(new RouterHandlerFactory("org.shine.web","shine")
