@@ -1,4 +1,4 @@
-package org.shine.web.util;
+package top.arkstack.shine.web.util;
 
 import com.google.common.base.Strings;
 import io.vertx.core.http.HttpServerRequest;

@@ -1,4 +1,4 @@
-package org.shine.web.annotations;
+package top.arkstack.shine.web.annotations;
 
 /**
  * @author 7le

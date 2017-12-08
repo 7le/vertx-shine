@@ -1,9 +1,9 @@
-package org.shine.web.vertx;
+package top.arkstack.shine.web.vertx;
 
 import io.vertx.ext.web.Router;
-import org.shine.web.verticle.RegistryHandlersFactory;
-import org.shine.web.verticle.RouterRegistryHandlersFactory;
-import org.shine.web.verticle.VerticleLauncher;
+import top.arkstack.shine.web.verticle.RegistryHandlersFactory;
+import top.arkstack.shine.web.verticle.RouterRegistryHandlersFactory;
+import top.arkstack.shine.web.verticle.VerticleLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

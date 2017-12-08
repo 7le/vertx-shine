@@ -1,4 +1,4 @@
-package org.shine.web.verticle;
+package top.arkstack.shine.web.verticle;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;

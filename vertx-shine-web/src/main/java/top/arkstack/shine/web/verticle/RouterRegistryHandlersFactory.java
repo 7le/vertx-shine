@@ -1,11 +1,11 @@
-package org.shine.web.verticle;
+package top.arkstack.shine.web.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
-import org.shine.web.vertx.VertxRouter;
+import top.arkstack.shine.web.vertx.VertxRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

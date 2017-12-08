@@ -1,4 +1,4 @@
-package org.shine.web.verticle;
+package top.arkstack.shine.web.verticle;
 
 import com.google.common.base.Strings;
 import io.vertx.core.*;
@@ -8,7 +8,7 @@ import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.IgnitionEx;
 import org.apache.ignite.internal.util.typedef.F;
-import org.shine.web.util.IpUtils;
+import top.arkstack.shine.web.util.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

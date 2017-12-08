@@ -1,7 +1,7 @@
-package org.shine.web.vertx;
+package top.arkstack.shine.web.vertx;
 
 import io.vertx.ext.web.Router;
-import org.shine.web.verticle.VerticleLauncher;
+import top.arkstack.shine.web.verticle.VerticleLauncher;
 
 /**
  * @author 7le

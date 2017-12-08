@@ -9,8 +9,8 @@ public class ServerMain {
         //开启集群
         VerticleLauncher.isCluster = true;
         VerticleLauncher.getStandardVertx(Vertx.vertx());
-        DeployVertxServer.startDeploy(new RouterHandlerFactory("org.shine.web","shine")
-                .createRouter(),"org.shine.web",7777);
+        DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web","shine")
+                .createRouter(),"top.arkstack.shine.web",7777);
 
     }
 }
