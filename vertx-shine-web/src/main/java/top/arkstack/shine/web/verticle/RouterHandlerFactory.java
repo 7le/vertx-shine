@@ -21,9 +21,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Router Factory
+ *
  * @author 7le
- * @Description: Router Factory
- * @date 2017年12月7日
  * @since v1.0.0
  */
 public class RouterHandlerFactory {

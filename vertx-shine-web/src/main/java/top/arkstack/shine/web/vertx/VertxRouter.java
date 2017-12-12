@@ -4,9 +4,9 @@ import io.vertx.ext.web.Router;
 import top.arkstack.shine.web.verticle.VerticleLauncher;
 
 /**
+ * 获得全局的Router对象
+ *
  * @author 7le
- * @Description: 获得全局的Router对象
- * @date 2017年12月7日
  * @since v1.0.0
  */
 public class VertxRouter {

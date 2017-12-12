@@ -1,9 +1,9 @@
 package top.arkstack.shine.web.annotations;
 
 /**
+ * request method
+ *
  * @author 7le
- * @Description: request method
- * @date 2017年12月6日
  * @since v1.0.0
  */
 public enum RequestMethod {

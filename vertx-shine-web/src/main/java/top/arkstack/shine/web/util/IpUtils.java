@@ -11,9 +11,10 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 /**
+ * IpUtils
+ *
  * @author : 7le
- * @description: IpUtils
- * @date: 2017/11/16
+ * @since v1.0.0
  */
 public class IpUtils {
 

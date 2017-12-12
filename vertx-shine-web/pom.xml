@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vertx-shine-web</groupId>
-    <artifactId>vertx-shine-web</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>top.arkstack</groupId>
+    <artifactId>shine-web</artifactId>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>vertx-shine-web</name>
@@ -115,8 +115,9 @@
     <developers>
         <developer>
             <name>7le</name>
-            <email>sile.heqian@gmail.com</email>
+            <email>silk.heqian@gmail.com</email>
             <organization>ArkStack</organization>
+            <organizationUrl>7le.top</organizationUrl>
         </developer>
     </developers>
 

@@ -10,9 +10,4 @@ import java.lang.annotation.Target;
 public @interface RouteHandler {
 
     String value() default "";
-
-    /**
-     * 是否直接暴露(开放平台)
-     */
-    boolean isOpen() default false;
 }

@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
+ * 注册vertx相关服务
+ *
  * @author 7le
- * @Description: 注册vertx相关服务
- * @date 2017年12月7日
  * @since v1.0.0
  */
 public class DeployVertxServer {

@@ -9,9 +9,9 @@ import top.arkstack.shine.web.annotations.RouteMapping;
 import top.arkstack.shine.web.verticle.VerticleLauncher;
 
 /**
+ * test verticle
+ *
  * @author 7le
- * @Description: test verticle
- * @date 2017年12月7日
  * @since v1.0.0
  */
 @RouteHandler

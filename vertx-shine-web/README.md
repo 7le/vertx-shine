@@ -5,14 +5,16 @@
 ```
 public class ServerMain {
 
-    public static void main(String[] args) throws IOException {
-        //开启集群
-        VerticleLauncher.isCluster = true;
-        VerticleLauncher.getStandardVertx(Vertx.vertx());
-        DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web","shine")
-                .createRouter(),"top.arkstack.shine.web",7777);
-
-    }
+    //开启集群 如果不需要集群 就注释掉这句代码
+            VerticleLauncher.isCluster = true;
+            VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
+                try {
+                    DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
+                            .createRouter(), "top.arkstack.shine.web", 7777);
+                } catch (IOException e) {
+                    System.out.println("启动失败: " + e.getMessage());
+                }
+            });
 }
 ```
 
@@ -35,5 +37,7 @@ public class VideoVerticle {
     }
 }
 ```
+
+> 集群 是使用了ignite 默认的配置位default-ignite.xml 需要自定义的配置的话增加ignite.xml在资源文件的根目录下
 
 继续补充中...

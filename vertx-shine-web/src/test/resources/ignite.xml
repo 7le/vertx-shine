@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="org.apache.ignite.configuration.IgniteConfiguration">
+        <property name="failureDetectionTimeout" value="60001"/>
+
+        <!--
+                Explicitly configure TCP discovery SPI to provide list of
+                initial nodes from the first cluster.
+      -->
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <!-- Initial local port to listen to. -->
+                <property name="localPort" value="48500"/>
+                <!-- Changing local port range. This is an optional action. -->
+                <property name="localPortRange" value="20"/>
+                <!-- Setting up IP finder for this cluster -->
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <!--
+                                    Addresses and port range of the nodes from the first cluster.
+                                    127.0.0.1 can be replaced with actual IP addresses or host names.
+                                        Port range is optional.
+                                -->
+                                <!--<value>192.168.20.52:48500..48520</value>-->
+                                <value>127.0.0.1:48500..48520</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+        <!--
+        Explicitly configure TCP communication SPI changing local port number for the nodes from the first cluster.
+        -->
+        <property name="communicationSpi">
+            <bean class="org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi">
+
+                <property name="localPort" value="48100"/>
+                <!-- 配置允许向客户端节点输出消息的最大值，如果输出队列的大小超过配置的值，
+                    该客户端节点会从集群断开以防止拖慢整个集群-->
+                <property name="slowClientQueueLimit" value="1000"/>
+            </bean>
+        </property>
+
+        <property name="gridLogger">
+            <bean class="org.apache.ignite.logger.slf4j.Slf4jLogger" />
+        </property>
+    </bean>
+
+</beans>

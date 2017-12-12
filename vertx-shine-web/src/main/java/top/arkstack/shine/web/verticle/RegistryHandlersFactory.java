@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 /**
+ * 处理器注册 Factory
+ *
  * @author 7le
- * @Description: 处理器注册 Factory
- * @date 2017年12月7日
  * @since v1.0.0
  */
 public class RegistryHandlersFactory {

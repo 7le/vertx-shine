@@ -8,18 +8,18 @@ import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.IgnitionEx;
 import org.apache.ignite.internal.util.typedef.F;
-import top.arkstack.shine.web.util.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.arkstack.shine.web.util.IpUtils;
 
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
+ * Verticle Launcher
+ *
  * @author 7le
- * @Description: Verticle Launcher
- * @date 2017年12月6日
  * @since v1.0.0
  */
 public class VerticleLauncher {
@@ -66,38 +66,36 @@ public class VerticleLauncher {
         localVertx = vertx;
     }
 
-    private static void setClusterVertxWithDeploy(Vertx vertx, VertxOptions options, Consumer<Vertx> runner) {
+    private static void init(Vertx vertx, Handler<Vertx> handler) {
+        Objects.requireNonNull(vertx, "The vertx is empty.");
+        standardVertx = vertx;
+        localVertx = vertx;
+        handler.handle(standardVertx);
+    }
+
+    private static void setClusterVertxWithDeploy(Handler<Vertx> handler, VertxOptions options, Consumer<Vertx> runner) {
         options.setClusterManager(new IgniteClusterManager(loadConfiguration()));
         Vertx.clusteredVertx(options, vertxAsyncResult -> {
             if (vertxAsyncResult.succeeded()) {
-                standardVertx = vertxAsyncResult.result();
-                runner.accept(standardVertx);
-                localVertx = vertx;
+                runner.accept(vertxAsyncResult.result());
+                handler.handle(vertxAsyncResult.result());
             } else {
                 System.out.println("Can't create cluster");
                 System.exit(1);
             }
         });
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * 设置集群 可部署指定的verticle
      *
      * @param vertx    standardVertx
-     * @param ip       ip
      * @param verticle 需要启动的指定verticle
      * @param worker   是否使用worker pool 启动指定verticle
      * @throws InterruptedException
      */
-    public static void setClusterVertxWithDeploy(Vertx vertx, String ip, String verticle, boolean worker) throws InterruptedException {
-        if (ip == null || "".equals(ip)) {
-            ip = IpUtils.getIpAddress();
-        }
+    public static void setClusterVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, boolean worker) throws InterruptedException {
+        String ip = IpUtils.getIpAddress();
         VertxOptions options = new VertxOptions().setClustered(true).setClusterHost(ip)
                 .setWorkerPoolSize(workerPoolSize).setClusterHost(ip);
         EventBusOptions eventBusOptions = options.getEventBusOptions();
@@ -107,10 +105,10 @@ public class VerticleLauncher {
         options.setEventBusOptions(eventBusOptions.setReconnectAttempts(eventBusReconnectAttempts)
                 .setClusterPingInterval(clusterPingInterval).setHost(ip));
         DeploymentOptions deploymentOptions = new DeploymentOptions().setWorker(worker);
-        VerticleLauncher.setClusterVertxWithDeploy(vertx, verticle, options, deploymentOptions, null);
+        VerticleLauncher.setClusterVertxWithDeploy(vertx, handler, verticle, options, deploymentOptions, null);
     }
 
-    private static void setClusterVertxWithDeploy(Vertx vertx, String verticle, VertxOptions options,
+    private static void setClusterVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, VertxOptions options,
                                                   DeploymentOptions deploymentOptions, Handler<AsyncResult<String>> completionHandler) {
         if (options == null) {
             options = new VertxOptions();
@@ -138,7 +136,7 @@ public class VerticleLauncher {
             }
         };
         if (options.isClustered()) {
-            setClusterVertxWithDeploy(vertx, options, runner);
+            setClusterVertxWithDeploy(handler, options, runner);
         } else {
             runner.accept(vertx);
         }
@@ -174,25 +172,10 @@ public class VerticleLauncher {
     /**
      * 设置集群
      */
-    public static Vertx setClusterVertx(Vertx vertx) {
+    private static Vertx setClusterVertx(Vertx vertx, Handler<Vertx> handler) {
         Objects.requireNonNull(vertx, "The vertx of cluster is empty.");
-        String ip = IpUtils.getIpAddress();
         try {
-            setClusterVertx(vertx, ip);
-        } catch (Exception e) {
-            log.error("启动集群失败", e);
-        }
-        return standardVertx;
-    }
-
-    /**
-     * 设置集群
-     */
-    public static Vertx setClusterVertx(Vertx vertx, String ip) {
-        Objects.requireNonNull(vertx, "The vertx of cluster is empty.");
-        Objects.requireNonNull(ip, "The host address is empty.");
-        try {
-            setClusterVertxWithDeploy(vertx, ip, null, false);
+            setClusterVertxWithDeploy(vertx, handler, null, false);
         } catch (Exception e) {
             log.error("启动集群失败", e);
         }
@@ -202,12 +185,12 @@ public class VerticleLauncher {
     /**
      * 获得标准vertx对象
      */
-    public static Vertx getStandardVertx(Vertx vertx) {
+    public static Vertx getStandardVertx(Vertx vertx, Handler<Vertx> handler) {
         if (!isCluster) {
-            init(vertx);
+            init(vertx, handler);
         } else {
             try {
-                setClusterVertx(vertx);
+                setClusterVertx(vertx, handler);
             } catch (Exception e) {
                 log.error("启动失败", e);
             }

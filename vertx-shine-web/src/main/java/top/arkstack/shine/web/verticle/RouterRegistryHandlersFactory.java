@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 /**
+ * router 扫描注册器
+ *
  * @author 7le
- * @Description: router 扫描注册器
- * @date 2017年12月7日
  * @since v1.0.0
  */
 public class RouterRegistryHandlersFactory extends AbstractVerticle {
