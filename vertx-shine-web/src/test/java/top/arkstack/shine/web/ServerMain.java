@@ -21,7 +21,7 @@ public class ServerMain {
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
-                        .createRouter(), "top.arkstack.shine.web", 7777);
+                        .createRouter(), 7777);
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }

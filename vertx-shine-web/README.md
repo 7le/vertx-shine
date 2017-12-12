@@ -1,20 +1,23 @@
 # vertx-shine-web
 
-> 启动 demo ，默认不开启集群， (集群使用ignite实现)
+> 启动 demo ，默认不开启集群， (集群使用ignite实现) ，RouterHandlerFactory方法中第一个路径是扫描router（Verticle），
+后一个是路由前缀
 
 ```
 public class ServerMain {
 
-    //开启集群 如果不需要集群 就注释掉这句代码
-            VerticleLauncher.isCluster = true;
-            VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
-                try {
-                    DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
-                            .createRouter(), "top.arkstack.shine.web", 7777);
-                } catch (IOException e) {
-                    System.out.println("启动失败: " + e.getMessage());
-                }
-            });
+    public static void main(String[] args) {
+        //开启集群 如果不需要集群 就注释掉这句代码
+        VerticleLauncher.isCluster = true;
+        VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
+            try {
+                DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
+                        .createRouter(), 7777);
+            } catch (IOException e) {
+                System.out.println("启动失败: " + e.getMessage());
+            }
+        });
+    }
 }
 ```
 
@@ -39,5 +42,30 @@ public class VideoVerticle {
 ```
 
 > 集群 是使用了ignite 默认的配置位default-ignite.xml 需要自定义的配置的话增加ignite.xml在资源文件的根目录下
+
+> 默认参数，可以自行修改
+
+```
+    /**
+     * 是否集群模式
+     */
+    public static volatile boolean isCluster = false;
+
+    /**
+     * 默认WorkerPool 大小为50
+     */
+    public static volatile int workerPoolSize = 100;
+
+    /**
+     * 默认重新连接次数
+     */
+    public static volatile int eventBusReconnectAttempts = 50;
+
+    /**
+     * 设置集群 ping 间隔值（ms）
+     */
+    public static volatile int clusterPingInterval = 5000;
+
+```
 
 继续补充中...
