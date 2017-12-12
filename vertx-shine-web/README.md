@@ -1,24 +1,38 @@
 # vertx-shine-web
 
 > 启动 demo ，默认不开启集群， (集群使用ignite实现) ，RouterHandlerFactory方法中第一个路径是扫描router（Verticle），
-后一个是路由前缀
+后一个是路由前缀。 下面有两种部署方式，可以任选。
 
 ```
 public class ServerMain {
 
     public static void main(String[] args) {
-        //集成spring
+        //集成spring 不需要可以注释掉
         SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
-                DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
+                DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web","shine")
                         .createRouter(), 7777);
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+
+        //指定部署Verticle  true -> Worker Verticle
+        /*try {
+            VerticleLauncher.setVertxWithDeploy(Vertx.vertx(), v -> {
+                try {
+                    DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web")
+                            .createRouter(), 7000);
+                } catch (IOException e) {
+                    System.out.println("启动失败: " + e.getMessage());
+                }
+            }, HttpVerticle.class.getName(), true);
+        } catch (InterruptedException e) {
+            System.out.println("启动失败: " + e.getMessage());
+        }*/
     }
 }
 ```

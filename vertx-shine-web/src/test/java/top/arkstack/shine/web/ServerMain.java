@@ -29,5 +29,19 @@ public class ServerMain {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+
+        //指定部署Verticle  true -> Worker Verticle
+        try {
+            VerticleLauncher.setVertxWithDeploy(Vertx.vertx(), v -> {
+                try {
+                    DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web")
+                            .createRouter(), 7000);
+                } catch (IOException e) {
+                    System.out.println("启动失败: " + e.getMessage());
+                }
+            }, HttpVerticle.class.getName(), true);
+        } catch (InterruptedException e) {
+            System.out.println("启动失败: " + e.getMessage());
+        }
     }
 }
