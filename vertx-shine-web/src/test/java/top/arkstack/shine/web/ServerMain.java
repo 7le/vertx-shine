@@ -31,7 +31,7 @@ public class ServerMain {
         });
 
         //指定部署Verticle  true -> Worker Verticle
-        try {
+        /*try {
             VerticleLauncher.setVertxWithDeploy(Vertx.vertx(), v -> {
                 try {
                     DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web")
@@ -42,6 +42,6 @@ public class ServerMain {
             }, HttpVerticle.class.getName(), true);
         } catch (InterruptedException e) {
             System.out.println("启动失败: " + e.getMessage());
-        }
+        }*/
     }
 }

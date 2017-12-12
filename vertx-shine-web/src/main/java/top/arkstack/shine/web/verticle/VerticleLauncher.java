@@ -88,7 +88,7 @@ public class VerticleLauncher {
     }
 
     /**
-     * 部署 -> 可指定部署的verticle (Worker Verticle)
+     * 部署：可指定部署的verticle (Worker Verticle)
      *
      * @param vertx    standardVertx
      * @param verticle 需要启动的指定verticle
