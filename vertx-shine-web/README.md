@@ -7,6 +7,8 @@
 public class ServerMain {
 
     public static void main(String[] args) {
+        //集成spring
+        SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {

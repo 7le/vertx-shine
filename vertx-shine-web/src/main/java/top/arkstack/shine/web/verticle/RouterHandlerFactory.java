@@ -1,5 +1,6 @@
 package top.arkstack.shine.web.verticle;
 
+import com.google.common.base.Strings;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
@@ -38,12 +39,12 @@ public class RouterHandlerFactory {
     /**
      * 默认api前缀
      */
-    public static volatile String GATEWAY_PREFIX = "/";
+    private static volatile String GATEWAY_PREFIX = "/";
 
     public RouterHandlerFactory(String routerScanAddress, String gatewayPrefix) {
         Objects.requireNonNull(routerScanAddress, "The router package address scan is empty.");
         reflections = new Reflections(routerScanAddress);
-        GATEWAY_PREFIX = gatewayPrefix;
+        GATEWAY_PREFIX = gatewayPrefix == null ? "" : gatewayPrefix;
     }
 
     public RouterHandlerFactory(String routerScanAddress) {
@@ -69,7 +70,7 @@ public class RouterHandlerFactory {
         router.route().handler(CorsHandler.create("*").allowedMethods(method));
         Set<Class<?>> handlers = reflections.getTypesAnnotatedWith(RouteHandler.class);
         try {
-            handlers.stream().forEach(handler -> {
+            handlers.forEach(handler -> {
                 try {
                     registerHandler(router, handler);
                 } catch (Exception e) {
@@ -84,8 +85,10 @@ public class RouterHandlerFactory {
 
     private void registerHandler(Router router, Class<?> handler) throws Exception {
         String root = GATEWAY_PREFIX;
-        if (!root.startsWith("/")) {
-            root = "/" + root;
+        if (!Strings.isNullOrEmpty(root)) {
+            if (!root.startsWith("/")) {
+                root = "/" + root;
+            }
         }
         if (handler.isAnnotationPresent(RouteHandler.class)) {
             RouteHandler routeHandler = handler.getAnnotation(RouteHandler.class);
@@ -107,7 +110,11 @@ public class RouterHandlerFactory {
                         routeUrl = routeUrl.substring(1);
                     }
                 }
-                String url = root.concat("/" + routeUrl);
+                String url;
+                if(root.endsWith("/"))
+                    url = root.concat(routeUrl);
+                else
+                    url = root.concat("/" + routeUrl);
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
                 log.info("Register New Handler -> {}:{}", requestMethod, url);
                 switch (requestMethod) {
