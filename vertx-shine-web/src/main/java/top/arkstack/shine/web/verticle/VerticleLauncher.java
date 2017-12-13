@@ -32,7 +32,7 @@ public class VerticleLauncher {
     public static volatile boolean isCluster = false;
 
     /**
-     * 默认WorkerPool 大小为50
+     * 默认WorkerPool 大小为100
      */
     public static volatile int workerPoolSize = 100;
 
