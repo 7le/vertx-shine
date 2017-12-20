@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -100,7 +101,7 @@ public class RouterHandlerFactory {
         for (Method method : methods) {
             if (method.isAnnotationPresent(RouteMapping.class)) {
                 RouteMapping mapping = method.getAnnotation(RouteMapping.class);
-                RequestMethod requestMethod = mapping.method();
+                RequestMethod[] requestMethods = mapping.method();
                 String routeUrl;
                 if (mapping.value().startsWith("/:")) {
                     routeUrl = (method.getName() + mapping.value());
@@ -116,38 +117,40 @@ public class RouterHandlerFactory {
                 else
                     url = root.concat("/" + routeUrl);
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
-                log.info("Register New Handler -> {}:{}", requestMethod, url);
-                switch (requestMethod) {
-                    case ROUTE:
-                        router.route(url).handler(methodHandler);
-                        break;
-                    case HEAD:
-                        router.head(url).handler(methodHandler);
-                        break;
-                    case OPTIONS:
-                        router.options(url).handler(methodHandler);
-                        break;
-                    case PUT:
-                        router.put(url).handler(methodHandler);
-                        break;
-                    case POST:
-                        router.post(url).handler(methodHandler);
-                        break;
-                    case DELETE:
-                        router.delete(url).handler(methodHandler);
-                        break;
-                    case TRACE:
-                        router.trace(url).handler(methodHandler);
-                        break;
-                    case CONNECT:
-                        router.connect(url).handler(methodHandler);
-                        break;
-                    case PATCH:
-                        router.patch(url).handler(methodHandler);
-                        break;
-                    default:
-                        router.get(url).handler(methodHandler);
-                        break;
+                log.info("Register New Handler -> {}:{}", Arrays.toString(requestMethods), url);
+                for (RequestMethod requestMethod:requestMethods){
+                    switch (requestMethod) {
+                        case ROUTE:
+                            router.route(url).handler(methodHandler);
+                            break;
+                        case HEAD:
+                            router.head(url).handler(methodHandler);
+                            break;
+                        case OPTIONS:
+                            router.options(url).handler(methodHandler);
+                            break;
+                        case PUT:
+                            router.put(url).handler(methodHandler);
+                            break;
+                        case POST:
+                            router.post(url).handler(methodHandler);
+                            break;
+                        case DELETE:
+                            router.delete(url).handler(methodHandler);
+                            break;
+                        case TRACE:
+                            router.trace(url).handler(methodHandler);
+                            break;
+                        case CONNECT:
+                            router.connect(url).handler(methodHandler);
+                            break;
+                        case PATCH:
+                            router.patch(url).handler(methodHandler);
+                            break;
+                        default:
+                            router.get(url).handler(methodHandler);
+                            break;
+                    }
                 }
             }
         }

@@ -37,7 +37,7 @@ public class VideoVerticle {
     /**
      * restful
      */
-    @RouteMapping(method = RequestMethod.GET, value = "/server/:type")
+    @RouteMapping(method = {RequestMethod.GET,RequestMethod.HEAD}, value = "/server/:type.htm")
     public Handler<RoutingContext> getStatus() {
         return routingContext -> {
             if ("monitor".equals(routingContext.request().getParam("type"))) {
