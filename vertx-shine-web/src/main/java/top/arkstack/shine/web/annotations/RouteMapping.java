@@ -17,7 +17,7 @@ public @interface RouteMapping {
     /**
      * http method
      */
-    RequestMethod method() default RequestMethod.GET;
+    RequestMethod[] method() default RequestMethod.GET;
 
     /**
      * 详情

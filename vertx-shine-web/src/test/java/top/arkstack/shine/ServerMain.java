@@ -1,4 +1,4 @@
-package top.arkstack.shine.web;
+package top.arkstack.shine;
 
 import io.vertx.core.Vertx;
 import top.arkstack.shine.web.util.SpringUtils;
@@ -23,8 +23,8 @@ public class ServerMain {
         VerticleLauncher.isCluster = true;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
-                DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web","shine")
-                        .createRouter(), 7777);
+                DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
+                        .createRouter(), "top.arkstack.shine.handler", 7777);
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }

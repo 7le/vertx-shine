@@ -3,6 +3,7 @@ package top.arkstack.shine.web;
 import com.alibaba.fastjson.JSON;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.ext.web.RoutingContext;
 import top.arkstack.shine.web.annotations.RequestMethod;
 import top.arkstack.shine.web.annotations.RouteHandler;
@@ -24,6 +25,8 @@ public class VideoVerticle {
     @RouteMapping(method = RequestMethod.GET, value = "/test")
     public Handler<RoutingContext> test() {
         return routingContext -> vertx.executeBlocking(future -> {
+            EventBus eventBus=vertx.eventBus();
+            eventBus.send("address","gogo");
             System.out.println("executeBlocking: "+Thread.currentThread().getName());
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要
@@ -34,7 +37,7 @@ public class VideoVerticle {
     /**
      * restful
      */
-    @RouteMapping(method = RequestMethod.GET, value = "/server/:type")
+    @RouteMapping(method = {RequestMethod.GET,RequestMethod.HEAD}, value = "/server/:type.htm")
     public Handler<RoutingContext> getStatus() {
         return routingContext -> {
             if ("monitor".equals(routingContext.request().getParam("type"))) {
