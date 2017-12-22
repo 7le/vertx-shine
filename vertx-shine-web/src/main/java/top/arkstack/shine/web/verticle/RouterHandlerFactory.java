@@ -112,48 +112,63 @@ public class RouterHandlerFactory {
                     }
                 }
                 String url;
-                if(root.endsWith("/"))
+                if(root.endsWith("/")) {
                     url = root.concat(routeUrl);
-                else
+                } else {
                     url = root.concat("/" + routeUrl);
+                }
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
                 log.info("Register New Handler -> {}:{}", Arrays.toString(requestMethods), url);
-                for (RequestMethod requestMethod:requestMethods){
-                    switch (requestMethod) {
-                        case ROUTE:
-                            router.route(url).handler(methodHandler);
-                            break;
-                        case HEAD:
-                            router.head(url).handler(methodHandler);
-                            break;
-                        case OPTIONS:
-                            router.options(url).handler(methodHandler);
-                            break;
-                        case PUT:
-                            router.put(url).handler(methodHandler);
-                            break;
-                        case POST:
-                            router.post(url).handler(methodHandler);
-                            break;
-                        case DELETE:
-                            router.delete(url).handler(methodHandler);
-                            break;
-                        case TRACE:
-                            router.trace(url).handler(methodHandler);
-                            break;
-                        case CONNECT:
-                            router.connect(url).handler(methodHandler);
-                            break;
-                        case PATCH:
-                            router.patch(url).handler(methodHandler);
-                            break;
-                        default:
-                            router.get(url).handler(methodHandler);
-                            break;
+                if(requestMethods.length>0){
+                    for (RequestMethod requestMethod:requestMethods){
+                        switch (requestMethod) {
+                            case ROUTE:
+                                router.route(url).handler(methodHandler);
+                                break;
+                            case HEAD:
+                                router.head(url).handler(methodHandler);
+                                break;
+                            case OPTIONS:
+                                router.options(url).handler(methodHandler);
+                                break;
+                            case PUT:
+                                router.put(url).handler(methodHandler);
+                                break;
+                            case POST:
+                                router.post(url).handler(methodHandler);
+                                break;
+                            case DELETE:
+                                router.delete(url).handler(methodHandler);
+                                break;
+                            case TRACE:
+                                router.trace(url).handler(methodHandler);
+                                break;
+                            case CONNECT:
+                                router.connect(url).handler(methodHandler);
+                                break;
+                            case PATCH:
+                                router.patch(url).handler(methodHandler);
+                                break;
+                            case GET:
+                                router.get(url).handler(methodHandler);
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                }else {
+                    router.route(url).handler(methodHandler);
+                    router.head(url).handler(methodHandler);
+                    router.options(url).handler(methodHandler);
+                    router.put(url).handler(methodHandler);
+                    router.post(url).handler(methodHandler);
+                    router.delete(url).handler(methodHandler);
+                    router.trace(url).handler(methodHandler);
+                    router.connect(url).handler(methodHandler);
+                    router.patch(url).handler(methodHandler);
+                    router.get(url).handler(methodHandler);
                 }
             }
         }
     }
-
 }

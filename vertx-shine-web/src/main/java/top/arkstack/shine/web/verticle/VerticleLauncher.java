@@ -4,12 +4,14 @@ import com.google.common.base.Strings;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBusOptions;
 import io.vertx.spi.cluster.ignite.IgniteClusterManager;
+import io.vertx.spi.cluster.zookeeper.ZookeeperClusterManager;
 import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.IgnitionEx;
 import org.apache.ignite.internal.util.typedef.F;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.arkstack.shine.web.bean.ClusterMode;
 import top.arkstack.shine.web.util.IpUtils;
 
 import java.io.InputStream;
@@ -32,6 +34,11 @@ public class VerticleLauncher {
     public static volatile boolean isCluster = false;
 
     /**
+     * 设置集群方式 默认为zookeeper
+     */
+    public static volatile ClusterMode cluster_mode = ClusterMode.ZOOKEEPER;
+
+    /**
      * 默认WorkerPool 大小为100
      */
     public static volatile int workerPoolSize = 100;
@@ -47,15 +54,17 @@ public class VerticleLauncher {
     public static volatile int clusterPingInterval = 5000;
 
     /**
+     * 设置eventbus 通信端口，防止多vertx实例时方式冲突，不设置自动分配
+     */
+    public static volatile int eventbusPort = -1;
+
+    /**
      * vertx 对象
      */
     private static Vertx standardVertx;
 
     private static Vertx localVertx;
 
-    /**
-     * 暂用ignite
-     */
     private static final String CONFIG_FILE = "ignite.xml";
 
     private static final String DEFAULT_CONFIG_FILE = "default-ignite.xml";
@@ -74,7 +83,13 @@ public class VerticleLauncher {
     }
 
     private static void setClusterVertxWithDeploy(Handler<Vertx> handler, VertxOptions options, Consumer<Vertx> runner) {
-        options.setClusterManager(new IgniteClusterManager(loadConfiguration()));
+        if (ClusterMode.ZOOKEEPER.equals(cluster_mode)) {
+            options.setClusterManager(new ZookeeperClusterManager());
+        } else if (ClusterMode.IGNITE.equals(cluster_mode)) {
+            options.setClusterManager(new IgniteClusterManager(loadConfiguration()));
+        } else {
+            throw new IllegalArgumentException("Please set the correct value for cluster_mode");
+        }
         Vertx.clusteredVertx(options, vertxAsyncResult -> {
             if (vertxAsyncResult.succeeded()) {
                 init(vertxAsyncResult.result());
@@ -105,12 +120,15 @@ public class VerticleLauncher {
         }
         options.setEventBusOptions(eventBusOptions.setReconnectAttempts(eventBusReconnectAttempts)
                 .setClusterPingInterval(clusterPingInterval).setHost(ip));
+        if (eventbusPort != -1) {
+            eventBusOptions.setPort(eventbusPort);
+        }
         DeploymentOptions deploymentOptions = new DeploymentOptions().setWorker(worker);
         VerticleLauncher.setVertxWithDeploy(vertx, handler, verticle, options, deploymentOptions, null);
     }
 
     private static void setVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, VertxOptions options,
-                                                  DeploymentOptions deploymentOptions, Handler<AsyncResult<String>> completionHandler) {
+                                           DeploymentOptions deploymentOptions, Handler<AsyncResult<String>> completionHandler) {
         if (options == null) {
             options = new VertxOptions();
         }
@@ -122,11 +140,13 @@ public class VerticleLauncher {
             }
             try {
                 if (deploymentOptions != null) {
-                    if (!Strings.isNullOrEmpty(verticle))
+                    if (!Strings.isNullOrEmpty(verticle)) {
                         v.deployVerticle(verticle, deploymentOptions, h);
+                    }
                 } else {
-                    if (!Strings.isNullOrEmpty(verticle))
+                    if (!Strings.isNullOrEmpty(verticle)) {
                         v.deployVerticle(verticle, h);
+                    }
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
