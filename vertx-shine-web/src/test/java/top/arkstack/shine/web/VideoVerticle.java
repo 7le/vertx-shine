@@ -25,9 +25,9 @@ public class VideoVerticle {
     @RouteMapping(method = RequestMethod.GET, value = "/test")
     public Handler<RoutingContext> test() {
         return routingContext -> vertx.executeBlocking(future -> {
-            EventBus eventBus=vertx.eventBus();
-            eventBus.send("address","gogo");
-            System.out.println("executeBlocking: "+Thread.currentThread().getName());
+            EventBus eventBus = vertx.eventBus();
+            eventBus.send("address", "gogo");
+            System.out.println("executeBlocking: " + Thread.currentThread().getName());
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要
             future.complete(1);
@@ -37,7 +37,7 @@ public class VideoVerticle {
     /**
      * restful
      */
-    @RouteMapping(method = {RequestMethod.GET,RequestMethod.HEAD}, value = "/server/:type.htm")
+    @RouteMapping(method = {RequestMethod.GET, RequestMethod.HEAD}, value = "/server/:type.htm")
     public Handler<RoutingContext> getStatus() {
         return routingContext -> {
             if ("monitor".equals(routingContext.request().getParam("type"))) {

@@ -1,0 +1,11 @@
+{
+  "zookeeperHosts":"192.168.20.52",
+  "sessionTimeout":500,
+  "connectTimeout":500,
+  "rootPath":"vertx.shine",
+  "retry": {
+    "initialSleepTime":100,
+    "intervalTimes":10000,
+    "maxTimes":5
+  }
+}
