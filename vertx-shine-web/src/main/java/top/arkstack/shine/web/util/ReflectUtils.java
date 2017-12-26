@@ -230,7 +230,6 @@ public class ReflectUtils {
      * 通过反射, 获得Class定义中声明的泛型参数的类型, 注意泛型必须定义在父类处
      * 如无法找到, 返回Object.class.
      * eg.
-     * public UserDao extends HibernateDao<User>
      *
      * @param clazz The class to introspect
      * @return the first generic declaration, or Object.class if cannot be determined
@@ -243,8 +242,6 @@ public class ReflectUtils {
     /**
      * 通过反射, 获得Class定义中声明的父类的泛型参数的类型.
      * 如无法找到, 返回Object.class.
-     *
-     * 如public UserDao extends HibernateDao<User,Long>
      *
      * @param clazz clazz The class to introspect
      * @param index the Index of the generic ddeclaration,start from 0.
