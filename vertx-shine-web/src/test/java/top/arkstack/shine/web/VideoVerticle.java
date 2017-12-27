@@ -5,6 +5,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.ext.web.RoutingContext;
+import top.arkstack.shine.web.annotations.EventBusService;
 import top.arkstack.shine.web.annotations.RequestMethod;
 import top.arkstack.shine.web.annotations.RouteHandler;
 import top.arkstack.shine.web.annotations.RouteMapping;
@@ -22,11 +23,13 @@ public class VideoVerticle {
 
     private Vertx vertx = VerticleLauncher.getStandardVertx();
 
-    @RouteMapping(method = RequestMethod.GET, value = "/test")
+    @RouteMapping(value = "/test")
     public Handler<RoutingContext> test() {
         return routingContext -> vertx.executeBlocking(future -> {
             EventBus eventBus = vertx.eventBus();
             eventBus.send("address", "gogo");
+            //guava eventbus 解耦
+            EventBusService.getEventBus().post("amazing");
             System.out.println("executeBlocking: " + Thread.currentThread().getName());
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要

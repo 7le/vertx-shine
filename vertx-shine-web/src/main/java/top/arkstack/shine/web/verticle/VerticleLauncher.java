@@ -11,6 +11,7 @@ import org.apache.ignite.internal.IgnitionEx;
 import org.apache.ignite.internal.util.typedef.F;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.arkstack.shine.web.annotations.EventBusService;
 import top.arkstack.shine.web.bean.ClusterMode;
 import top.arkstack.shine.web.util.IpUtils;
 
@@ -59,6 +60,11 @@ public class VerticleLauncher {
     public static volatile int eventbusPort = -1;
 
     /**
+     * 设置 guava eventbus 默认开启
+     */
+    public static volatile boolean guavaEventBus = true;
+
+    /**
      * vertx 对象
      */
     private static Vertx standardVertx;
@@ -80,6 +86,9 @@ public class VerticleLauncher {
         standardVertx = vertx;
         localVertx = vertx;
         handler.handle(standardVertx);
+        if(guavaEventBus){
+            EventBusService.init();
+        }
     }
 
     private static void setClusterVertxWithDeploy(Handler<Vertx> handler, VertxOptions options, Consumer<Vertx> runner) {
@@ -95,6 +104,9 @@ public class VerticleLauncher {
                 init(vertxAsyncResult.result());
                 runner.accept(vertxAsyncResult.result());
                 handler.handle(vertxAsyncResult.result());
+                if(guavaEventBus){
+                    EventBusService.init();
+                }
             } else {
                 System.out.println("Can't create cluster");
                 System.exit(1);
@@ -201,7 +213,7 @@ public class VerticleLauncher {
     }
 
     /**
-     * 获得标准vertx对象
+     * 启动 并获得标准vertx
      */
     public static Vertx getStandardVertx(Vertx vertx, Handler<Vertx> handler) {
         if (!isCluster) {
