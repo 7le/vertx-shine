@@ -116,6 +116,30 @@ public class VideoVerticle {
      */
     public static volatile int eventbusPort = -1;
 
+    /**
+     * 设置 guava eventbus 默认开启
+     */
+    public static volatile boolean guavaEventBus = true;
+
+```
+
+>集成guava eventbus，使用demo
+
+发送：
+``EventBusService.getEventBus().post("amazing"); ``
+
+
+接收：
+```
+@EventSubscriber
+public class TestGuavaEventBus {
+
+    @AllowConcurrentEvents
+    @Subscribe
+    public void onMsg(String msg) {
+        System.out.println("guava eventbus : It is " + msg + " !");
+    }
+}
 ```
 
 继续补充中...
