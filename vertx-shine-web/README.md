@@ -15,6 +15,9 @@ public class ServerMain {
         SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
+        //开启guava eventbus
+        VerticleLauncher.guavaEventBus=true;
+        EventBusService.maxPoolSize=100;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
@@ -30,6 +33,7 @@ public class ServerMain {
         SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
+        VerticleLauncher.guavaEventBus=true;
         VerticleLauncher.cluster_mode=ClusterMode.IGNITE;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
@@ -116,6 +120,51 @@ public class VideoVerticle {
      */
     public static volatile int eventbusPort = -1;
 
+    /**
+     * 设置 guava eventbus 默认关闭
+     */
+    public static volatile boolean guavaEventBus = false;
+
+```
+
+>集成guava eventbus，使用demo
+
+配置：
+```
+    /**
+     * 线程池维护线程的最小数量 缺省大小为 cpu个数的 2倍
+     */
+    public volatile static int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
+
+    /**
+     * 线程池维护线程的最大数量 缺省最大线程数为 cpu个数的4倍
+     */
+    public volatile static int maxPoolSize =Runtime.getRuntime().availableProcessors() * 4;
+
+    /**
+     * 线程存活保持时间
+     */
+    public volatile static long keepAliveTime = 60L;
+```
+
+打开:
+``VerticleLauncher.guavaEventBus=true;``
+
+发送：
+``EventBusService.getEventBus().post("amazing"); ``
+
+
+接收：
+```
+@EventSubscriber
+public class TestGuavaEventBus {
+
+    @AllowConcurrentEvents
+    @Subscribe
+    public void onMsg(String msg) {
+        System.out.println("guava eventbus : It is " + msg + " !");
+    }
+}
 ```
 
 继续补充中...

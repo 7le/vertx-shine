@@ -2,6 +2,7 @@ package top.arkstack.shine;
 
 import io.vertx.core.Vertx;
 import top.arkstack.shine.web.HttpVerticle;
+import top.arkstack.shine.web.annotations.EventBusService;
 import top.arkstack.shine.web.bean.ClusterMode;
 import top.arkstack.shine.web.util.SpringUtils;
 import top.arkstack.shine.web.verticle.RouterHandlerFactory;
@@ -27,6 +28,9 @@ public class ServerMain {
         SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
+        //开启guava eventbus
+        VerticleLauncher.guavaEventBus=true;
+        EventBusService.maxPoolSize=100;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
@@ -42,6 +46,7 @@ public class ServerMain {
         SpringUtils.init("spring.xml");
         //开启集群 如果不需要集群 就注释掉这句代码
         VerticleLauncher.isCluster = true;
+        VerticleLauncher.guavaEventBus=true;
         VerticleLauncher.cluster_mode=ClusterMode.IGNITE;
         VerticleLauncher.getStandardVertx(Vertx.vertx(), v -> {
             try {
