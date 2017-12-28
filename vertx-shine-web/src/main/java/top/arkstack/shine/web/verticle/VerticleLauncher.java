@@ -60,9 +60,9 @@ public class VerticleLauncher {
     public static volatile int eventbusPort = -1;
 
     /**
-     * 设置 guava eventbus 默认开启
+     * 设置 guava eventbus 默认关闭
      */
-    public static volatile boolean guavaEventBus = true;
+    public static volatile boolean guavaEventBus = false;
 
     /**
      * vertx 对象

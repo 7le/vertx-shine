@@ -33,6 +33,21 @@ public class EventBusService {
     private static EventBus eventBus;
 
     /**
+     * 线程池维护线程的最小数量 缺省大小为 cpu个数的 2倍
+     */
+    public volatile static int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
+
+    /**
+     * 线程池维护线程的最大数量 缺省最大线程数为 cpu个数的4倍
+     */
+    public volatile static int maxPoolSize =Runtime.getRuntime().availableProcessors() * 4;
+
+    /**
+     * 线程存活保持时间
+     */
+    public volatile static long keepAliveTime = 60L;
+
+    /**
      * get eventbus of guava
      */
     public static EventBus getEventBus() {
@@ -52,8 +67,8 @@ public class EventBusService {
         eventBus.register(eventListener);
     }
 
-    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(8, 50,
-            60L, TimeUnit.SECONDS,
+    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(corePoolSize, maxPoolSize,
+            keepAliveTime, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(),
             new ThreadFactoryImpl("pool-api-handler-thread-"));
 
