@@ -20,7 +20,7 @@ import java.io.IOException;
 public class ServerMain {
 
     public static void main(String[] args) {
-        startByZookeeper();
+        startByIgnite();
     }
 
     private static void startByZookeeper(){
