@@ -29,7 +29,7 @@ public class VideoVerticle {
             EventBus eventBus = vertx.eventBus();
             eventBus.send("address", "gogo");
             //guava eventbus 解耦
-            EventBusService.getEventBus().post("amazing");
+            EventBusService.postEvent("amazing");
             System.out.println("executeBlocking: " + Thread.currentThread().getName());
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要

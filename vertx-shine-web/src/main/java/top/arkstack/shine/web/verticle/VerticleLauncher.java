@@ -120,9 +120,8 @@ public class VerticleLauncher {
      * @param vertx    standardVertx
      * @param verticle 需要启动的指定verticle
      * @param worker   Worker Verticle
-     * @throws InterruptedException
      */
-    public static void setVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, boolean worker) throws InterruptedException {
+    public static void setVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, boolean worker){
         String ip = IpUtils.getIpAddress();
         VertxOptions options = new VertxOptions().setClustered(true).setClusterHost(ip)
                 .setWorkerPoolSize(workerPoolSize).setClusterHost(ip);
