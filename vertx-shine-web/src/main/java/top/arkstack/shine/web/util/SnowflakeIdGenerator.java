@@ -16,23 +16,13 @@ public class SnowflakeIdGenerator {
     /**
      * 机器id所占的位数
      */
-    private final long workerIdBits = 5L;
+    private final long workerIdBits = 10L;
 
     /**
-     * 数据标识id所占的位数
-     */
-    private final long dataCenterIdBits = 5L;
-
-    /**
-     * 支持的最大机器id(十进制)，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
-     * -1L 左移 5位 (worker id 所占位数) 即 5位二进制所能获得的最大十进制数 - 31
+     * 支持的最大机器id(十进制)，结果是1023 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+     * -1L 左移 10位 (worker id 所占位数) 即 10位二进制所能获得的最大十进制数 - 1023
      */
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-
-    /**
-     * 支持的最大数据标识id - 31
-     */
-    private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
 
     /**
      * 序列在id中占的位数
@@ -45,14 +35,9 @@ public class SnowflakeIdGenerator {
     private final long workerIdMoveBits = sequenceBits;
 
     /**
-     * 数据标识id 左移位数 - 17(12+5)
+     * 时间截向 左移位数 - 22(10+12)
      */
-    private final long dataCenterIdMoveBits = sequenceBits + workerIdBits;
-
-    /**
-     * 时间截向 左移位数 - 22(5+5+12)
-     */
-    private final long timestampMoveBits = sequenceBits + workerIdBits + dataCenterIdBits;
+    private final long timestampMoveBits = sequenceBits + workerIdBits;
 
     /**
      * 生成序列的掩码(12位所对应的最大整数值)，这里为4095 (0b111111111111=0xfff=4095)
@@ -60,13 +45,10 @@ public class SnowflakeIdGenerator {
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);
     //=================================================Works's Parameter================================================
     /**
-     * 工作机器ID(0~31)
+     * 工作机器ID(0~1023)
      */
     private long workerId;
-    /**
-     * 数据中心ID(0~31)
-     */
-    private long dataCenterId;
+
     /**
      * 毫秒内序列(0~4095)
      */
@@ -82,18 +64,13 @@ public class SnowflakeIdGenerator {
     /**
      * 构造函数
      *
-     * @param workerId     工作ID (0~31)
-     * @param dataCenterId 数据中心ID (0~31)
+     * @param workerId     工作ID (0~1023)
      */
-    public SnowflakeIdGenerator(long workerId, long dataCenterId) {
+    public SnowflakeIdGenerator(long workerId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("Worker Id can't be greater than %d or less than 0", maxWorkerId));
         }
-        if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
-            throw new IllegalArgumentException(String.format("DataCenter Id can't be greater than %d or less than 0", maxDataCenterId));
-        }
         this.workerId = workerId;
-        this.dataCenterId = dataCenterId;
     }
 
     // ==================================================Methods========================================================
@@ -125,7 +102,6 @@ public class SnowflakeIdGenerator {
         lastTimestamp = timestamp;
         //移位并通过或运算拼到一起组成64位的ID
         return ((timestamp - startTime) << timestampMoveBits)
-                | (dataCenterId << dataCenterIdMoveBits)
                 | (workerId << workerIdMoveBits)
                 | sequence;
     }
@@ -148,9 +124,9 @@ public class SnowflakeIdGenerator {
         return System.currentTimeMillis();
     }
 
-    public static void init(long workerId, long dataCenterId) {
+    public static void init(long workerId) {
         if (idWorker == null) {
-            idWorker = new SnowflakeIdGenerator(workerId, dataCenterId);
+            idWorker = new SnowflakeIdGenerator(workerId);
         }
     }
 }
