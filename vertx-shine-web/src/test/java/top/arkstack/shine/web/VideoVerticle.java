@@ -34,7 +34,7 @@ public class VideoVerticle {
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要
             future.complete(1);
-        }, h -> routingContext.response().setStatusCode(200).end("It is amazing !"));
+        }, false, h -> routingContext.response().setStatusCode(200).end("It is amazing !"));
     }
 
     /**
