@@ -42,6 +42,8 @@ public class RouterHandlerFactory {
      */
     private static volatile String GATEWAY_PREFIX = "/";
 
+    private static Router router;
+
     public RouterHandlerFactory(String routerScanAddress, String gatewayPrefix) {
         Objects.requireNonNull(routerScanAddress, "The router package address scan is empty.");
         reflections = new Reflections(routerScanAddress);
@@ -54,10 +56,18 @@ public class RouterHandlerFactory {
     }
 
     /**
+     * 获得Router对象
+     */
+    public static Router getRouter() {
+        Objects.requireNonNull(router, "Please create Router first.");
+        return router;
+    }
+
+    /**
      * 扫描注册handler
      */
     public Router createRouter() {
-        Router router = VertxRouter.getRouter();
+        router = VertxRouter.getRouter();
         router.route("/*").handler(BodyHandler.create()).handler(CookieHandler.create());
         //设置跨域
         Set<HttpMethod> method = new HashSet<HttpMethod>() {{

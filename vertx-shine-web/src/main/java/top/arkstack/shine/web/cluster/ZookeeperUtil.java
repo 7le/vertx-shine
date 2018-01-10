@@ -24,6 +24,8 @@ public class ZookeeperUtil {
 
     private static Map<String, HashSet> map = new HashMap<>();
 
+    private static String DEFAULT = "default";
+
     /**
      * 默认使用 _ 为分隔符
      */
@@ -63,6 +65,9 @@ public class ZookeeperUtil {
     }
 
     public static String getAddress(String business, Object key) {
+        if (key == null) {
+            key = DEFAULT;
+        }
         HashSet addresses = map.get(business);
         if (addresses != null && addresses.size() > 0) {
             return addresses.toString().substring(1, addresses.toString().length() - 1)

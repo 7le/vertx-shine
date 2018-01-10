@@ -1,6 +1,8 @@
 # vertx-shine-web
 
-> 启动 demo ，默认不开启集群， (若开启集群的话，默认为zookeeper,ignite可以选择) ，RouterHandlerFactory方法中第一个路径是扫描router（Verticle），
+### 🌈 startup
+
+> 默认不开启集群， (若开启集群的话，默认为zookeeper,ignite可以选择) ，RouterHandlerFactory方法中第一个路径是扫描router（Verticle），
 后一个是路由前缀。 下面有两种部署方式，可以任选。
 
 ```
@@ -60,6 +62,8 @@ public class ServerMain {
 }
 ```
 
+### 💌 Verticle
+
 > Verticle demo 跟springmvc controller 差不多
 
 ```
@@ -75,15 +79,19 @@ public class VideoVerticle {
             System.out.println("type : " + routingContext.request().getParam("type"));
             //需要调用complete  FutureImpl -> setHandler 需要
             future.complete(1);
-        }, h -> routingContext.response().setStatusCode(200).end("It is amazing !"));
+        }, false, h -> routingContext.response().setStatusCode(200).end("It is amazing !"));
     }
 }
 ```
+⚠ 这里需要注意：使用``executeBlocking``会调用``worker``线程，``ordered`` 默认为``true``（相当于串行），当设置为``false``就是并行。
+建议设置为``false``，因为当为``true``的时候，``worker``线程池中不同地方的调用，可能会出现阻塞，而且还不易排查。
 
-> 集群 默认为zookeeper 默认的配置为default-zookeeper.json 需要自定义的配置的话在资源文件的根目录下覆盖就行，
+### 🔥 集群配置
+
+> 默认为zookeeper 默认的配置为default-zookeeper.json 需要自定义的配置的话在资源文件的根目录下覆盖就行，
 使用ignite的话同理。
 
-> 默认参数，可以自行修改
+默认参数，可以自行修改：
 
 ```
     /**
@@ -123,7 +131,7 @@ public class VideoVerticle {
 
 ```
 
->集成guava eventbus，使用demo
+### 🍐 集成guava eventbus
 
 配置：
 ```
@@ -163,4 +171,21 @@ public class TestGuavaEventBus {
 }
 ```
 
-继续补充中...
+### 🔒提供细粒度锁
+
+使用demo：
+```
+    lock.lock(key);
+    try {
+        try {
+            //需要加锁的代码
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    } finally {
+        lock.unlock(key);
+    }
+```
+
+
+继续补充中 ⏳...

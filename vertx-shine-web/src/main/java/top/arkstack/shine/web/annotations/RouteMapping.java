@@ -2,6 +2,13 @@ package top.arkstack.shine.web.annotations;
 
 import java.lang.annotation.*;
 
+/**
+ * 将Web请求映射到特定的处理程序类或处理程序方法上
+ * 类似 springmvc 中的@RequestMapping
+ *
+ * @author : 7le
+ * @since v1.0.0
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
