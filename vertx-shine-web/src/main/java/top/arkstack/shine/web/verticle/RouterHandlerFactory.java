@@ -78,7 +78,13 @@ public class RouterHandlerFactory {
             add(HttpMethod.DELETE);
             add(HttpMethod.HEAD);
         }};
-        router.route().handler(CorsHandler.create("*").allowedMethods(method));
+        Set<String> allowHeaders = new HashSet<>();
+        allowHeaders.add("x-requested-with");
+        allowHeaders.add("Access-Control-Allow-Origin");
+        allowHeaders.add("origin");
+        allowHeaders.add("Content-Type");
+        allowHeaders.add("accept");
+        router.route().handler(CorsHandler.create("*").allowedMethods(method).allowedHeaders(allowHeaders));
         Set<Class<?>> handlers = reflections.getTypesAnnotatedWith(RouteHandler.class);
         try {
             handlers.forEach(handler -> {

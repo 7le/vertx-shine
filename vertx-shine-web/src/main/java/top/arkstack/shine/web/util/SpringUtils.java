@@ -18,6 +18,10 @@ public class SpringUtils {
         ctx = new ClassPathXmlApplicationContext(path);
     }
 
+    public static void initContext(ApplicationContext applicationContext) {
+        ctx = applicationContext;
+    }
+
     public static <T> T getBean(Class<T> cls) {
         return ctx.getBean(cls);
     }
