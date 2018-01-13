@@ -19,6 +19,7 @@ import top.arkstack.shine.web.verticle.VerticleLauncher;
  * @since v1.0.0
  */
 @RouteHandler
+@RouteMapping(value = "/video")
 public class VideoVerticle {
 
     private Vertx vertx = VerticleLauncher.getStandardVertx();

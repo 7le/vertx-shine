@@ -107,9 +107,16 @@ public class RouterHandlerFactory {
                 root = "/" + root;
             }
         }
-        if (handler.isAnnotationPresent(RouteHandler.class)) {
-            RouteHandler routeHandler = handler.getAnnotation(RouteHandler.class);
-            root = root + routeHandler.value();
+        if (handler.isAnnotationPresent(RouteMapping.class)) {
+            RouteMapping routeHandler = handler.getAnnotation(RouteMapping.class);
+            if (!root.endsWith("/")) {
+                root = root.concat("/");
+            }
+            if (routeHandler.value().startsWith("/")) {
+                root = root + routeHandler.value().substring(1);
+            } else {
+                root = root + routeHandler.value();
+            }
         }
         Object instance = handler.newInstance();
         Method[] methods = handler.getMethods();
@@ -119,24 +126,20 @@ public class RouterHandlerFactory {
                 RouteMapping mapping = method.getAnnotation(RouteMapping.class);
                 RequestMethod[] requestMethods = mapping.method();
                 String routeUrl;
-                if (mapping.value().startsWith("/:")) {
-                    routeUrl = (method.getName() + mapping.value());
-                } else {
-                    routeUrl = (mapping.value().endsWith(method.getName()) ? mapping.value() : (mapping.isCover() ? mapping.value() : mapping.value() + method.getName()));
-                    if (routeUrl.startsWith("/")) {
-                        routeUrl = routeUrl.substring(1);
-                    }
+                routeUrl = (mapping.value().endsWith(method.getName()) ? mapping.value() : (mapping.isCover() ? mapping.value() : mapping.value() + method.getName()));
+                if (routeUrl.startsWith("/")) {
+                    routeUrl = routeUrl.substring(1);
                 }
                 String url;
-                if(root.endsWith("/")) {
+                if (root.endsWith("/")) {
                     url = root.concat(routeUrl);
                 } else {
                     url = root.concat("/" + routeUrl);
                 }
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
                 log.info("Register New Handler -> {}:{}", Arrays.toString(requestMethods), url);
-                if(requestMethods.length>0){
-                    for (RequestMethod requestMethod:requestMethods){
+                if (requestMethods.length > 0) {
+                    for (RequestMethod requestMethod : requestMethods) {
                         switch (requestMethod) {
                             case ROUTE:
                                 router.route(url).handler(methodHandler);
@@ -172,7 +175,7 @@ public class RouterHandlerFactory {
                                 break;
                         }
                     }
-                }else {
+                } else {
                     router.route(url).handler(methodHandler);
                     router.head(url).handler(methodHandler);
                     router.options(url).handler(methodHandler);

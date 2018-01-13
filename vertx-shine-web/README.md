@@ -68,11 +68,12 @@ public class ServerMain {
 
 ```
 @RouteHandler
+@RouteMapping(value = "/video")
 public class VideoVerticle {
 
     private Vertx vertx = VerticleLauncher.getStandardVertx();
 
-    @RouteMapping(method = RequestMethod.GET, value = "test")
+    @RouteMapping(method = RequestMethod.GET, value = "/test")
     public Handler<RoutingContext> test() {
         return routingContext -> vertx.executeBlocking(future -> {
             System.out.println("executeBlocking: "+Thread.currentThread().getName());
