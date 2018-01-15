@@ -3,6 +3,7 @@ package lock;
 import top.arkstack.shine.web.lock.KeyLock;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,63 +19,28 @@ public class KeyLockTest {
 
 
     public static void main(String[] args) {
-
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(8, 50,
-                60L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>());
-        int i = 0;
-        Scanner scan = new Scanner(System.in);
-        String a = "123";
-        //System.out.println(a.hashCode());
-        Test test = new Test();
-        while (i < 10) {
-            a = scan.next();
-            //System.out.println(a.hashCode());
-            test.setKey(a);
-            System.out.println("=====================start================= " + a + new Date());
-            executor.execute(test);
-            i++;
-        }
-
+        test();
     }
 
-    static class Test implements Runnable {
-
-        private final KeyLock<String> lock = new KeyLock<>();
-
-        private String key;
-
-        public String getKey() {
-            return key;
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
-
-        @Override
-        public void run() {
-            String a = key;
-            lock.lock(a);
-            try {
+    private static void test() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(8, 50,
+                60L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+        KeyLock<String> key = new KeyLock<>();
+        for (int i = 0; i < 16; i++) {
+            executor.execute(() -> {
+                int num = new Random().nextInt(5);
+                key.lock("key" + num);
                 try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
+                    System.out.println("==start====" + new Date() + " " + Thread.currentThread().getName() + "  key: " + num);
+                    TimeUnit.SECONDS.sleep(10);
+                    System.out.println("==end======" + new Date() + " " + Thread.currentThread().getName() + "  key: " + num);
+                } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    key.unlock("key" + num);
                 }
-                System.out.println("=====================end================= " + a + new Date());
-            } finally {
-                lock.unlock(a);
-            }
-
-            /*synchronized (key){
-                try {
-                    Thread.sleep(10000);
-                    System.out.println(key);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }*/
+            });
         }
     }
 }
