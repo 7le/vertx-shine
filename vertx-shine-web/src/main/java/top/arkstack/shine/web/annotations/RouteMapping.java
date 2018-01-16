@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * @author : 7le
  * @since v1.0.0
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RouteMapping {

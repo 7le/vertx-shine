@@ -35,12 +35,12 @@ public class EventBusService {
     /**
      * 线程池维护线程的最小数量 缺省大小为 cpu个数的 2倍
      */
-    public volatile static int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
+    public volatile static int corePoolSize = Runtime.getRuntime().availableProcessors() << 1;
 
     /**
      * 线程池维护线程的最大数量 缺省最大线程数为 cpu个数的4倍
      */
-    public volatile static int maxPoolSize =Runtime.getRuntime().availableProcessors() * 4;
+    public volatile static int maxPoolSize =Runtime.getRuntime().availableProcessors() << 2;
 
     /**
      * 线程存活保持时间

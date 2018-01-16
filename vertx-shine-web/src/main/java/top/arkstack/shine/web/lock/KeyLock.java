@@ -109,12 +109,12 @@ public class KeyLock<K> {
      * 锁定多个key，可中断
      *
      */
-    public void lockInterrupt(K[] keys) {
+    public void lockInterrupt(K[] keys) throws InterruptedException {
         if (keys == null) {
             return;
         }
         for (K key : keys) {
-            lock(key);
+            lockInterrupt(key);
         }
     }
 
