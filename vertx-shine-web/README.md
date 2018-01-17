@@ -176,7 +176,8 @@ public class TestGuavaEventBus {
 
 使用demo：
 ```
-    lock.lock(key);
+    KeyLock<String> key = new KeyLock<>();
+    lock.lock("key");
     try {
         try {
             //需要加锁的代码
@@ -184,7 +185,26 @@ public class TestGuavaEventBus {
             e.printStackTrace();
         }
     } finally {
-        lock.unlock(key);
+        lock.unlock("key");
+    }
+```
+
+或者使用guava的Striped:
+```
+    private static final Striped<Lock> striped = Striped.lazyWeakLock(1024 * 2);
+
+    private static void demo() {
+        Lock key = striped.get("key");
+        key.lock();
+        try {
+            try {
+                //需要加锁的代码
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } finally {
+            key.unlock();
+        }
     }
 ```
 
