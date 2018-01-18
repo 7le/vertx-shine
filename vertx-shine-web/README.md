@@ -24,11 +24,14 @@ public class ServerMain {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
                         .createRouter(), "top.arkstack.shine.handler", 7777, s -> {
+                    //发布静态资源 路由可以自行修改
+                    RouterHandlerFactory.getRouter().route("/static/*").handler(StaticHandler.create("static"));
                 });
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+    }
 
     private static void startByIgnite() {
         //集成spring 不需要可以注释掉
@@ -46,6 +49,7 @@ public class ServerMain {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+    }
 
     private static void start() {
         //指定部署Verticle  true -> Worker Verticle
@@ -57,7 +61,7 @@ public class ServerMain {
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }
-        }, HttpVerticle.class.getName(), tru
+        }, HttpVerticle.class.getName(), true);
     }
 }
 ```
