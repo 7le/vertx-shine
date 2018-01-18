@@ -64,7 +64,7 @@ public class ServerMain {
 
 ### 💌 Verticle
 
-> Verticle demo 跟springmvc controller 差不多
+> Verticle 中利用注解来注册路由，并统一管理，需要获得router可以通过``RouterHandlerFactory.getRouter()``
 
 ```
 @RouteHandler
