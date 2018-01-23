@@ -66,6 +66,15 @@ public class ServerMain {
 }
 ```
 
+> 可以在启动时选择，默认关闭跨域，打开可以方便前后端开发，开发后可以拿掉交由nginx之类管理。
+
+```
+    /** 跨域开关 默认关闭*/
+    public static volatile boolean cors = false;
+
+    /** 允许的标签头 缺省x-requested-with，Access-Control-Allow-Origin，origin，Content-Type，accept*/
+    public static volatile Set<String> allowHeaders = new HashSet<>();
+```
 ### 💌 Verticle
 
 > Verticle 中利用注解来注册路由，并统一管理，需要获得router可以通过``RouterHandlerFactory.getRouter()``
