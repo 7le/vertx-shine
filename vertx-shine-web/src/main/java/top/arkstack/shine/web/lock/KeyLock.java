@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 
 /**
  * 细粒度的锁 针对key来加锁
+ * 建议使用在耗时较长的业务场景
  *
  * @author : 7le
  * @since v1.0.5

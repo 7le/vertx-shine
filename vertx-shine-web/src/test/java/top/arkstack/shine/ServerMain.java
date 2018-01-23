@@ -1,6 +1,7 @@
 package top.arkstack.shine;
 
 import io.vertx.core.Vertx;
+import io.vertx.ext.web.handler.StaticHandler;
 import top.arkstack.shine.web.HttpVerticle;
 import top.arkstack.shine.web.annotations.EventBusService;
 import top.arkstack.shine.web.bean.ClusterMode;
@@ -35,6 +36,8 @@ public class ServerMain {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
                         .createRouter(), "top.arkstack.shine.handler", 7777, s -> {
+                    //发布静态资源 路由可以自行修改
+                    RouterHandlerFactory.getRouter().route("/static/*").handler(StaticHandler.create("static"));
                 });
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
@@ -71,6 +74,5 @@ public class ServerMain {
                 System.out.println("启动失败: " + e.getMessage());
             }
         }, HttpVerticle.class.getName(), true);
-
     }
 }

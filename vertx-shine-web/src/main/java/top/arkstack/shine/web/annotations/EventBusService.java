@@ -28,7 +28,7 @@ public class EventBusService {
     /**
      * 需要扫描注册的路径
      */
-    private static volatile Reflections reflections = new Reflections("");
+    private static volatile Reflections reflections = new Reflections();
 
     private static EventBus eventBus;
 

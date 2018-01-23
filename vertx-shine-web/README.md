@@ -24,11 +24,14 @@ public class ServerMain {
             try {
                 DeployVertxServer.startDeploy(new RouterHandlerFactory("top.arkstack.shine.web", "shine")
                         .createRouter(), "top.arkstack.shine.handler", 7777, s -> {
+                    //发布静态资源 路由可以自行修改
+                    RouterHandlerFactory.getRouter().route("/static/*").handler(StaticHandler.create("static"));
                 });
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+    }
 
     private static void startByIgnite() {
         //集成spring 不需要可以注释掉
@@ -46,6 +49,7 @@ public class ServerMain {
                 System.out.println("启动失败: " + e.getMessage());
             }
         });
+    }
 
     private static void start() {
         //指定部署Verticle  true -> Worker Verticle
@@ -57,14 +61,23 @@ public class ServerMain {
             } catch (IOException e) {
                 System.out.println("启动失败: " + e.getMessage());
             }
-        }, HttpVerticle.class.getName(), tru
+        }, HttpVerticle.class.getName(), true);
     }
 }
 ```
 
+> 可以在启动时选择，默认关闭跨域，打开可以方便前后端开发，开发后可以拿掉交由nginx之类管理。
+
+```
+    /** 跨域开关 默认关闭*/
+    public static volatile boolean cors = false;
+
+    /** 允许的标签头 缺省x-requested-with，Access-Control-Allow-Origin，origin，Content-Type，accept*/
+    public static volatile Set<String> allowHeaders = new HashSet<>();
+```
 ### 💌 Verticle
 
-> Verticle demo 跟springmvc controller 差不多
+> Verticle 中利用注解来注册路由，并统一管理，需要获得router可以通过``RouterHandlerFactory.getRouter()``
 
 ```
 @RouteHandler
@@ -176,7 +189,8 @@ public class TestGuavaEventBus {
 
 使用demo：
 ```
-    lock.lock(key);
+    KeyLock<String> key = new KeyLock<>();
+    lock.lock("key");
     try {
         try {
             //需要加锁的代码
@@ -184,7 +198,26 @@ public class TestGuavaEventBus {
             e.printStackTrace();
         }
     } finally {
-        lock.unlock(key);
+        lock.unlock("key");
+    }
+```
+
+或者使用guava的Striped:
+```
+    private static final Striped<Lock> striped = Striped.lazyWeakLock(1024 * 2);
+
+    private static void demo() {
+        Lock key = striped.get("key");
+        key.lock();
+        try {
+            try {
+                //需要加锁的代码
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } finally {
+            key.unlock();
+        }
     }
 ```
 

@@ -32,15 +32,17 @@ public class RouterHandlerFactory {
 
     private static Logger log = LoggerFactory.getLogger(RouterHandlerFactory.class);
 
-    /**
-     * 需要扫描注册的Router路径
-     */
+    /** 需要扫描注册的Router路径 */
     private static volatile Reflections reflections;
 
-    /**
-     * 默认api前缀
-     */
+    /** 默认api前缀 */
     private static volatile String GATEWAY_PREFIX = "/";
+
+    /** 跨域开关 默认关闭*/
+    public static volatile boolean cors = false;
+
+    /** 允许的标签头 缺省x-requested-with，Access-Control-Allow-Origin，origin，Content-Type，accept*/
+    public static volatile Set<String> allowHeaders = new HashSet<>();
 
     private static Router router;
 
@@ -51,8 +53,7 @@ public class RouterHandlerFactory {
     }
 
     public RouterHandlerFactory(String routerScanAddress) {
-        Objects.requireNonNull(routerScanAddress, "The router package address scan is empty.");
-        reflections = new Reflections(routerScanAddress);
+        reflections = Strings.isNullOrEmpty(routerScanAddress) ? new Reflections() : new Reflections(routerScanAddress);
     }
 
     /**
@@ -69,22 +70,23 @@ public class RouterHandlerFactory {
     public Router createRouter() {
         router = VertxRouter.getRouter();
         router.route("/*").handler(BodyHandler.create()).handler(CookieHandler.create());
-        //设置跨域
-        Set<HttpMethod> method = new HashSet<HttpMethod>() {{
-            add(HttpMethod.GET);
-            add(HttpMethod.POST);
-            add(HttpMethod.OPTIONS);
-            add(HttpMethod.PUT);
-            add(HttpMethod.DELETE);
-            add(HttpMethod.HEAD);
-        }};
-        Set<String> allowHeaders = new HashSet<>();
-        allowHeaders.add("x-requested-with");
-        allowHeaders.add("Access-Control-Allow-Origin");
-        allowHeaders.add("origin");
-        allowHeaders.add("Content-Type");
-        allowHeaders.add("accept");
-        router.route().handler(CorsHandler.create("*").allowedMethods(method).allowedHeaders(allowHeaders));
+        if(cors){
+            //设置跨域
+            Set<HttpMethod> method = new HashSet<HttpMethod>() {{
+                add(HttpMethod.GET);
+                add(HttpMethod.POST);
+                add(HttpMethod.OPTIONS);
+                add(HttpMethod.PUT);
+                add(HttpMethod.DELETE);
+                add(HttpMethod.HEAD);
+            }};
+            allowHeaders.add("x-requested-with");
+            allowHeaders.add("Access-Control-Allow-Origin");
+            allowHeaders.add("origin");
+            allowHeaders.add("Content-Type");
+            allowHeaders.add("accept");
+            router.route().handler(CorsHandler.create("*").allowedMethods(method).allowedHeaders(allowHeaders));
+        }
         Set<Class<?>> handlers = reflections.getTypesAnnotatedWith(RouteHandler.class);
         try {
             handlers.forEach(handler -> {
