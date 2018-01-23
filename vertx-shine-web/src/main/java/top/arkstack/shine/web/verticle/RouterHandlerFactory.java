@@ -51,8 +51,7 @@ public class RouterHandlerFactory {
     }
 
     public RouterHandlerFactory(String routerScanAddress) {
-        Objects.requireNonNull(routerScanAddress, "The router package address scan is empty.");
-        reflections = new Reflections(routerScanAddress);
+        reflections = Strings.isNullOrEmpty(routerScanAddress) ? new Reflections() : new Reflections(routerScanAddress);
     }
 
     /**
