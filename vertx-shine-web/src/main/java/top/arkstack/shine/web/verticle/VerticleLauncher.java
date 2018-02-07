@@ -55,6 +55,11 @@ public class VerticleLauncher {
     public static volatile int clusterPingInterval = 5000;
 
     /**
+     * 设置ip 是否取内网地址
+     */
+    public static volatile boolean isIntranet = true;
+
+    /**
      * 设置eventbus 通信端口，防止多vertx实例时方式冲突，不设置自动分配
      */
     public static volatile int eventbusPort = -1;
@@ -122,7 +127,7 @@ public class VerticleLauncher {
      * @param worker   Worker Verticle
      */
     public static void setVertxWithDeploy(Vertx vertx, Handler<Vertx> handler, String verticle, boolean worker){
-        String ip = IpUtils.getIpAddress();
+        String ip = IpUtils.getIp(isIntranet);
         VertxOptions options = new VertxOptions().setClustered(true).setClusterHost(ip)
                 .setWorkerPoolSize(workerPoolSize).setClusterHost(ip);
         EventBusOptions eventBusOptions = options.getEventBusOptions();
@@ -134,7 +139,8 @@ public class VerticleLauncher {
         if (eventbusPort != -1) {
             eventBusOptions.setPort(eventbusPort);
         }
-        DeploymentOptions deploymentOptions = new DeploymentOptions().setWorker(worker);
+        DeploymentOptions deploymentOptions
+                = new DeploymentOptions().setWorker(worker);
         VerticleLauncher.setVertxWithDeploy(vertx, handler, verticle, options, deploymentOptions, null);
     }
 
