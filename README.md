@@ -1,5 +1,7 @@
 # vertx-shine
 
+[![Join the chat at https://gitter.im/7le/vertx-shine](https://badges.gitter.im/7le/vertx-shine.svg)](https://gitter.im/7le/vertx-shine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/top.arkstack/shine-web/badge.svg)](https://maven-badges.herokuapp.com/maven-central/top.arkstack/shine-web)
 [![Gitter](https://badges.gitter.im/7le/vertx-shine.svg)](https://gitter.im/7le/vertx-shine)
 
