@@ -70,8 +70,12 @@ public class ZookeeperUtil {
         }
         HashSet addresses = map.get(business);
         if (addresses != null && addresses.size() > 0) {
+            int code = key.hashCode();
+            if (code == Integer.MIN_VALUE) {
+                code = code - 1;
+            }
             return addresses.toString().substring(1, addresses.toString().length() - 1)
-                    .split(",")[(Math.abs(key.hashCode()) % addresses.size())].trim();
+                    .split(",")[Math.abs(code) % addresses.size()].trim();
         } else {
             return null;
         }

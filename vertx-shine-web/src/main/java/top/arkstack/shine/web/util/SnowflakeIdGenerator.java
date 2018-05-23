@@ -11,38 +11,38 @@ public class SnowflakeIdGenerator {
     /**
      * 系统开始时间截 (UTC 2017-06-28 00:00:00)
      */
-    private final long startTime = 1498608000000L;
+    private static final long startTime = 1498608000000L;
 
     /**
      * 机器id所占的位数
      */
-    private final long workerIdBits = 10L;
+    private static final long workerIdBits = 10L;
 
     /**
      * 支持的最大机器id(十进制)，结果是1023 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
      * -1L 左移 10位 (worker id 所占位数) 即 10位二进制所能获得的最大十进制数 - 1023
      */
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    private static final long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
     /**
      * 序列在id中占的位数
      */
-    private final long sequenceBits = 12L;
+    private static final long sequenceBits = 12L;
 
     /**
      * 机器ID 左移位数 - 12 (即末 sequence 所占用的位数)
      */
-    private final long workerIdMoveBits = sequenceBits;
+    private static final long workerIdMoveBits = sequenceBits;
 
     /**
      * 时间截向 左移位数 - 22(10+12)
      */
-    private final long timestampMoveBits = sequenceBits + workerIdBits;
+    private static final long timestampMoveBits = sequenceBits + workerIdBits;
 
     /**
      * 生成序列的掩码(12位所对应的最大整数值)，这里为4095 (0b111111111111=0xfff=4095)
      */
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+    private static final long sequenceMask = -1L ^ (-1L << sequenceBits);
     //=================================================Works's Parameter================================================
     /**
      * 工作机器ID(0~1023)
@@ -58,7 +58,7 @@ public class SnowflakeIdGenerator {
      */
     private long lastTimestamp = -1L;
 
-    public static SnowflakeIdGenerator idWorker;
+    private static SnowflakeIdGenerator idWorker;
     //===============================================Constructors=======================================================
 
     /**
@@ -124,7 +124,7 @@ public class SnowflakeIdGenerator {
         return System.currentTimeMillis();
     }
 
-    public static void init(long workerId) {
+    synchronized public static void init(long workerId) {
         if (idWorker == null) {
             idWorker = new SnowflakeIdGenerator(workerId);
         }

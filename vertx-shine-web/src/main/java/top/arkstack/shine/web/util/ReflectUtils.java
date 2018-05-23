@@ -361,8 +361,7 @@ public class ReflectUtils {
      * @return
      */
     public static String capitalize(final String str) {
-        int strLen;
-        if (str == null || (strLen = str.length()) == 0) {
+        if (Strings.isNullOrEmpty(str)) {
             return str;
         }
         final char firstChar = str.charAt(0);
