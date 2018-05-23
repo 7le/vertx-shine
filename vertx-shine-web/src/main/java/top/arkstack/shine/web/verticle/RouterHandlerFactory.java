@@ -47,8 +47,7 @@ public class RouterHandlerFactory {
     private static Router router;
 
     public RouterHandlerFactory(String routerScanAddress, String gatewayPrefix) {
-        Objects.requireNonNull(routerScanAddress, "The router package address scan is empty.");
-        reflections = new Reflections(routerScanAddress);
+        reflections = Strings.isNullOrEmpty(routerScanAddress) ? new Reflections() : new Reflections(routerScanAddress);
         GATEWAY_PREFIX = gatewayPrefix == null ? "" : gatewayPrefix;
     }
 
