@@ -189,14 +189,11 @@ public class TestGuavaEventBus {
 
 使用demo：
 ```
-    KeyLock<String> key = new KeyLock<>();
+    KeyLock<String> lock = new KeyLock<>();
     lock.lock("key");
     try {
-        try {
-            //需要加锁的代码
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+      //需要加锁的代码
+      ......
     } finally {
         lock.unlock("key");
     }
@@ -210,11 +207,8 @@ public class TestGuavaEventBus {
         Lock key = striped.get("key");
         key.lock();
         try {
-            try {
-                //需要加锁的代码
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+          //需要加锁的代码
+          ......
         } finally {
             key.unlock();
         }
