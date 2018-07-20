@@ -52,11 +52,11 @@ public class SnowflakeIdGenerator {
     /**
      * 毫秒内序列(0~4095)
      */
-    private long sequence = 0L;
+    private static long sequence = 0L;
     /**
      * 上次生成ID的时间截
      */
-    private long lastTimestamp = -1L;
+    private static long lastTimestamp = -1L;
 
     private static SnowflakeIdGenerator idWorker;
     //===============================================Constructors=======================================================
@@ -128,5 +128,9 @@ public class SnowflakeIdGenerator {
         if (idWorker == null) {
             idWorker = new SnowflakeIdGenerator(workerId);
         }
+    }
+
+    public static SnowflakeIdGenerator getInstance() {
+        return idWorker;
     }
 }
