@@ -14,6 +14,6 @@
 <dependency>
   <groupId>top.arkstack</groupId>
   <artifactId>shine-web</artifactId>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
 </dependency>
 ```
