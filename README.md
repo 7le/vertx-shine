@@ -1,7 +1,8 @@
 # vertx-shine
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/top.arkstack/shine-web/badge.svg)](https://maven-badges.herokuapp.com/maven-central/top.arkstack/shine-web)
 [![Gitter](https://badges.gitter.im/7le/vertx-shine.svg)](https://gitter.im/7le/vertx-shine)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/top.arkstack/shine-web/badge.svg)](https://search.maven.org/artifact/top.arkstack/shine-web/)
+[![Latest release](https://img.shields.io/github/release/7le/shine-web.svg)](https://github.com/7le/vertx-shine/releases/latest)
 
 ### vertx-shine-web  🍀
 
