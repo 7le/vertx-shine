@@ -100,10 +100,22 @@ public class SnowflakeIdGenerator {
         }
         //上次生成ID的时间截
         lastTimestamp = timestamp;
-        //移位并通过或运算拼到一起组成64位的ID
-        return ((timestamp - startTime) << timestampMoveBits)
-                | (workerId << workerIdMoveBits)
-                | sequence;
+        return reverse(((timestamp - startTime) << timestampMoveBits) | (workerId << workerIdMoveBits)
+                | sequence);
+    }
+
+    /**
+     * 对long类型的id 进行位反转 （只取正数）
+     */
+    private static long reverse(long input) {
+        long result = 0;
+        for (int i = 0; i < 63; i++) {
+            if (((input >>> i) & 1L) == 1) {
+                int j = 62 - i;
+                result |= 1L << j;
+            }
+        }
+        return result;
     }
 
     /**
