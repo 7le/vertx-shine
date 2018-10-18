@@ -13,7 +13,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <vertx.version>3.5.0</vertx.version>
+        <vertx.version>3.5.4</vertx.version>
         <spring.version>4.3.7.RELEASE</spring.version>
         <reflections.version>0.9.10</reflections.version>
         <slf4j.version>1.7.12</slf4j.version>
